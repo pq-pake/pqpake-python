@@ -8,7 +8,7 @@ NB_ROUNDS = 14
 
 def hash_half(symmetric_key: bytes, half: bitarray) -> bitarray:
     """
-    Return a hash of `half` of size equal to
+    Returns a hash of `half` of size equal to
     the size of `half` using SHA512.
     The symmetric key is hashed with the half.
     """

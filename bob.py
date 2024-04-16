@@ -1,4 +1,4 @@
-from kyber_py.kyber import Kyber1024
+from kyber import Kyber1024
 from bitarray import bitarray
 
 
