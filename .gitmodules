@@ -1,0 +1,3 @@
+[submodule "kyber_py"]
+	path = kyber_py
+	url = https://github.com/GiacomoPope/kyber-py.git
