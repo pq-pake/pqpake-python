@@ -3,7 +3,7 @@ from bitarray import bitarray
 
 
 from .interlocutor import Interlocutor
-import ideal_cipher
+from . import ideal_cipher
 
 
 class Bob(Interlocutor):
@@ -34,11 +34,11 @@ class Bob(Interlocutor):
         )
         if self.debug:
             print(
-                f"{self.name.decode('utf-8')} decrypted public key: {self.public_key.hex()}"
+                f"{self.name.decode('utf-8')} decrypted public key: {self.public_key[:6].hex()}..."
             )
             print(
-                f"{self.name.decode('utf-8')} generated symmetric key: {self.symmetric_key.hex()}"
+                f"{self.name.decode('utf-8')} generated symmetric key: {self.symmetric_key[:6].hex()}..."
             )
             print(
-                f"{self.name.decode('utf-8')} encrypted ciphertext: {self.encrypted_ciphertext.hex()}"
+                f"{self.name.decode('utf-8')} encrypted ciphertext: {self.encrypted_ciphertext[:12].to01()}..."
             )

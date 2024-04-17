@@ -14,9 +14,9 @@ Via Poetry.
 
 ```python
 from cake import Alice, Bob
-alice, bob = Alice(), Bob()
-alice.generate_encrypted_public_key()
-bob.generate_encrypted_cyphertext(alice.encrypted_public_key)
+alice, bob = Alice(int(0).to_bytes(), b'Hello world!'), Bob(int(0).to_bytes(), b'Hello world!')
+alice.generate_keypair()
+bob.generate_symmetric_key(alice.encrypted_public_key)
 alice.decrypt_ciphertext(bob.encrypted_ciphertext)
-assert alice.symmetric_key == bob.symmetric_key  # Doesn't raise an error.
+assert alice.session_key == bob.session_key  # Doesn't raise an error.
 ```
