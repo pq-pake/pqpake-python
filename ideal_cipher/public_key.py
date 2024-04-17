@@ -25,7 +25,7 @@ def encrypt(public_key: bytes, symmetric_key: bytes) -> bitarray:
             value_being_encrypted[-i - 1] << i
             for i in range(len(value_being_encrypted))
         )
-        > COEFFICIENT_MAX_VALUE**NB_COEFFICIENTS
+        >= COEFFICIENT_MAX_VALUE**NB_COEFFICIENTS
     ):
         value_being_encrypted = feistel.encrypt(symmetric_key, value_being_encrypted)
     return value_being_encrypted + feistel.encrypt(symmetric_key, seed_part)
@@ -40,7 +40,7 @@ def decrypt(encrypted_public_key: bitarray, symmetric_key: bytes) -> bytes:
     )
     while (
         sum(key_being_decrypted[-i - 1] << i for i in range(len(key_being_decrypted)))
-        > COEFFICIENT_MAX_VALUE**NB_COEFFICIENTS
+        >= COEFFICIENT_MAX_VALUE**NB_COEFFICIENTS
     ):
         key_being_decrypted = feistel.decrypt(symmetric_key, key_being_decrypted)
     return encoder.decode(key_being_decrypted) + seed_part
