@@ -53,6 +53,7 @@ class Interlocutor:
             + second_name
             + self.encrypted_public_key
             + self.encrypted_ciphertext
+            + self.symmetric_key
         ).digest()
 
     def generate_keypair(self) -> None:

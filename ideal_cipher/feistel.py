@@ -13,7 +13,7 @@ def hash_half(symmetric_key: bytes, half: bitarray) -> bitarray:
     The symmetric key is hashed with the half.
     """
     result = bitarray()
-    for i in range(ceil(len(half) / 128)):
+    for i in range(ceil(len(half) / 512)):
         new_bits = bitarray()
         new_bits.frombytes(
             SHA512.new(symmetric_key + str(i).encode() + half.tobytes()).digest()
