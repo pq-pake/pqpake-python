@@ -1,8 +1,8 @@
-from kyber import Kyber1024
 from bitarray import bitarray
+from kyber import Kyber1024
 
-from .interlocutor import Interlocutor
 from . import ideal_cipher
+from .interlocutor import Interlocutor
 
 
 class Alice(Interlocutor):
@@ -26,13 +26,13 @@ class Alice(Interlocutor):
         self.public_key, self.secret_key = Kyber1024.keygen()
         self.encrypted_public_key = ideal_cipher.public_key.encrypt(self.public_key, self.derived_key)
         if self.debug:
-            print(f"{self.name.decode("utf-8")} generated keypair: {self.public_key[:6].hex()}...")
-            print(f"{self.name.decode("utf-8")} encrypted public key: {self.encrypted_public_key[:12].to01()}...")
+            print(f"{self.name.decode('utf-8')} generated keypair: {self.public_key[:6].hex()}...")
+            print(f"{self.name.decode('utf-8')} encrypted public key: {self.encrypted_public_key[:12].to01()}...")
 
     def decrypt_ciphertext(self, encrypted_ciphertext: bitarray) -> None:
         self.encrypted_ciphertext = encrypted_ciphertext
         self.ciphertext = ideal_cipher.ciphertext.decrypt(self.encrypted_ciphertext, self.derived_key)
         self.symmetric_key = Kyber1024.dec(self.ciphertext, self.secret_key)
         if self.debug:
-            print(f"{self.name.decode("utf-8")} decrypted ciphertext: {self.ciphertext[:6].hex()}...")
-            print(f"{self.name.decode("utf-8")} derived symmetric key: {self.symmetric_key[:6].hex()}...")
+            print(f"{self.name.decode('utf-8')} decrypted ciphertext: {self.ciphertext[:6].hex()}...")
+            print(f"{self.name.decode('utf-8')} derived symmetric key: {self.symmetric_key[:6].hex()}...")
