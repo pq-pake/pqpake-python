@@ -6,18 +6,18 @@ from Crypto.Hash import SHA512
 NB_ROUNDS = 14
 
 
-def hash_half(symmetric_key: bytes, half: bitarray) -> bitarray:
+def hash_half(half: bitarray, symmetric_key: bytes, index: int) -> bitarray:
     """
-    Returns a hash of `half` of size equal to
-    the size of `half` using SHA512.
-    The symmetric key is hashed with the half.
+    Returns a hash of `half` of size equal to the size of `half` using SHA512.
+
+    `symmetric_size` and `index` are also hashed alongside `half`.
     """
     result = bitarray()
+    hash_prefix = half.tobytes() + symmetric_key + str(index).encode()
+
     for i in range(ceil(len(half) / 512)):
         new_bits = bitarray()
-        new_bits.frombytes(
-            SHA512.new(symmetric_key + str(i).encode() + half.tobytes()).digest()
-        )
+        new_bits.frombytes(SHA512.new(hash_prefix + str(i).encode()).digest())
         result += new_bits
 
     return result[: len(half)]
@@ -38,9 +38,9 @@ def encrypt(symmetric_key: bytes, message: bitarray) -> bitarray:
     new_left: bitarray = bitarray()
     new_right: bitarray = bitarray()
 
-    for _ in range(NB_ROUNDS):
-        new_left = left ^ hash_half(symmetric_key, right)
-        new_right = right ^ hash_half(symmetric_key, new_left)
+    for i in range(NB_ROUNDS // 2):
+        new_left = left ^ hash_half(right, symmetric_key, i)
+        new_right = right ^ hash_half(new_left, symmetric_key, i)
 
         right = new_right
         left = new_left
@@ -48,7 +48,7 @@ def encrypt(symmetric_key: bytes, message: bitarray) -> bitarray:
     return new_left + new_right
 
 
-def decrypt(sym_key: bytes, cipher: bitarray) -> bitarray:
+def decrypt(symmetric__key: bytes, cipher: bitarray) -> bitarray:
     """
     Symmetric decryption of message using two-round Feistel,
     as described in https://eprint.iacr.org/2015/876.pdf
@@ -63,9 +63,9 @@ def decrypt(sym_key: bytes, cipher: bitarray) -> bitarray:
     new_left: bitarray = bitarray()
     new_right: bitarray = bitarray()
 
-    for _ in range(NB_ROUNDS):
-        new_right = right ^ hash_half(sym_key, left)
-        new_left = left ^ hash_half(sym_key, new_right)
+    for i in range(NB_ROUNDS // 2 - 1, -1, -1):
+        new_right = right ^ hash_half(left, symmetric__key, i)
+        new_left = left ^ hash_half(new_right, symmetric__key, i)
 
         right = new_right
         left = new_left
