@@ -51,3 +51,17 @@ alice.decrypt_ciphertext(bob.encrypted_ciphertext, bob.auth_verifier, bob.name)
 
 assert alice.session_key == bob.session_key  # Doesn't raise an error.
 ```
+
+## Class structure
+
+```
+Interocutor
+│
+└─── InterlocutorCake
+│   └─── AliceCake
+│   └─── BobCake
+│
+└───InterlocutorOCake
+    └─── AliceOCake
+    └─── BobOCake
+```
