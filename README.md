@@ -10,6 +10,14 @@ This implementation is based on [`kyber-py`](https://github.com/GiacomoPope/kybe
 
 Via Poetry.
 
+## Code execution
+
+Note that this is a package. Therefor, if you want to execute `tests.py` you will need to set your current working directory above the folder containing this repo. (for exemple, if this repo is in `~/git_repos/cakepython`, do `cd ~/git_repos`) and call
+
+```sh
+python -m cakepython.tests
+```
+
 ## Usage
 
 ```python

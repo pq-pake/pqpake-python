@@ -1,2 +1,2 @@
-from .alice import Alice  # NOQA
-from .bob import Bob  # NOQA
+from .cake.alice import AliceCake  # NOQA
+from .cake.bob import BobCake  # NOQA

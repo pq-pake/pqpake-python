@@ -1,5 +1,5 @@
-from Crypto.Hash import SHA512, SHA256
 from bitarray import bitarray
+from Crypto.Hash import SHA512
 
 
 class Interlocutor:
@@ -8,7 +8,6 @@ class Interlocutor:
         session_id: bytes,
         password: bytes,
         name: bytes,
-        interlocutor_name: bytes,
         debug: bool,
     ) -> None:
         # The debug parameter is a boolean that indicates whether the Interlocutor should print debug messages.
@@ -16,15 +15,16 @@ class Interlocutor:
         self.session_id: bytes = session_id
         self.password: bytes = password
         self.name: bytes = name
-        self.interlocutor_name: bytes = interlocutor_name
 
-        # We create attributes for the upcoming keys that will be exchanged.
+        # We create attributes for the upcoming keys and names that will be exchanged.
+        self.interlocutor_name: bytes | None = None
         self.public_key: bytes | None = None
         self.secret_key: bytes | None = None
         self.encrypted_public_key: bitarray | None = None
         self.symmetric_key: bytes | None = None
         self.ciphertext: bytes | None = None
         self.encrypted_ciphertext: bitarray | None = None
+        self._session_key: bytes | None = None
 
         if self.debug:
             print(
@@ -38,8 +38,14 @@ class Interlocutor:
 
     @property
     def session_key(self) -> bytes:
+        if not self._session_key is None:
+            return self._session_key
+
         if self.symmetric_key is None:
             raise ValueError("Kyber symmetric key is not set")
+
+        if self.interlocutor_name is None:
+            raise ValueError("Interlocutor name is not set")
 
         first_name: bytes = (
             self.name if self.name < self.interlocutor_name else self.interlocutor_name
@@ -47,20 +53,19 @@ class Interlocutor:
         second_name: bytes = (
             self.interlocutor_name if self.name < self.interlocutor_name else self.name
         )
-        return SHA256.new(
-            self.session_id
-            + first_name
-            + second_name
-            + self.encrypted_public_key
-            + self.encrypted_ciphertext
-            + self.symmetric_key
-        ).digest()
+
+        self._session_key = self._generate_session_key(first_name, second_name)
+
+        return self._session_key
+
+    def _generate_session_key(self, first_name: bytes, second_name: bytes) -> bytes:
+        raise NotImplementedError
 
     def generate_keypair(self) -> None:
         raise NotImplementedError
 
-    def generate_symmetric_key(self, encrypted_public_key: bitarray) -> None:
+    def generate_symmetric_key(self) -> None:
         raise NotImplementedError
 
-    def decrypt_ciphertext(self, encrypted_ciphertext: bitarray) -> None:
+    def decrypt_ciphertext(self) -> None:
         raise NotImplementedError

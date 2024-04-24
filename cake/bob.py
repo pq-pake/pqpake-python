@@ -1,30 +1,31 @@
-from kyber import Kyber1024
 from bitarray import bitarray
+from kyber import Kyber1024
+
+from .. import ideal_cipher
+from .interlocutor_cake import InterlocutorCake
 
 
-from .interlocutor import Interlocutor
-from . import ideal_cipher
-
-
-class Bob(Interlocutor):
+class BobCake(InterlocutorCake):
     def __init__(
         self,
         session_id: bytes,
         password: bytes,
         name: bytes = "Bob".encode("utf-8"),
-        interlocutor_name: bytes = "Alice".encode("utf-8"),
         debug: bool = True,
     ) -> None:
         super().__init__(
             session_id=session_id,
             password=password,
             name=name,
-            interlocutor_name=interlocutor_name,
             debug=debug,
         )
 
-    def generate_symmetric_key(self, encrypted_public_key: bitarray) -> None:
+    def generate_symmetric_key(
+        self, encrypted_public_key: bitarray, alice_name: bytes
+    ) -> None:
         self.encrypted_public_key = encrypted_public_key
+        self.interlocutor_name = alice_name
+
         self.public_key = ideal_cipher.public_key.decrypt(
             self.encrypted_public_key, self.derived_key
         )

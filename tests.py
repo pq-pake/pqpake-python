@@ -2,8 +2,8 @@ from bitarray import bitarray
 from Crypto.Random import get_random_bytes
 from kyber import Kyber1024
 
-import ideal_cipher.feistel as feistel
-import ideal_cipher.public_key as public_key
+from . import AliceCake, BobCake
+from .ideal_cipher import feistel, public_key
 
 
 def print_bytes(to_print: bytes, name: str, nbr_shown: int = 100) -> None:
@@ -66,6 +66,20 @@ def public_key_test():
         print("-" * 20)
 
 
-if __name__ == "__main__":
-    # feistel_test()
-    public_key_test()
+def cake_test():
+    alice = AliceCake(int(0).to_bytes(), b"password123", debug=True)
+    bob = BobCake(int(0).to_bytes(), b"password123", debug=True)
+
+    alice.generate_keypair()
+    bob.generate_symmetric_key(alice.encrypted_public_key, alice.name)  # type: ignore
+    alice.decrypt_ciphertext(bob.encrypted_ciphertext, bob.name)  # type: ignore
+
+    print(
+        "alice.session_key == bob.session_key:",
+        alice.session_key == bob.session_key,
+    )
+
+
+# feistel_test()
+# public_key_test()
+cake_test()
