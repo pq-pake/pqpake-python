@@ -26,7 +26,7 @@ class InterlocutorOCake(Interlocutor):
             self.session_id
             + first_name
             + second_name
-            + self.encrypted_public_key
+            + self.encrypted_public_key  # type: ignore
             + self.encrypted_ciphertext
             + self.auth_verifier
             + self.symmetric_key
@@ -36,6 +36,9 @@ class InterlocutorOCake(Interlocutor):
     def auth_verifier(self) -> bytes:
         if self.interlocutor_name is None:
             raise ValueError("Interlocutor name is not set")
+
+        if self.symmetric_key is None:
+            raise ValueError("Kyber symmetric key is not set")
 
         first_name: bytes = (
             self.name if self.name < self.interlocutor_name else self.interlocutor_name
@@ -48,7 +51,7 @@ class InterlocutorOCake(Interlocutor):
             self.session_id
             + first_name
             + second_name
-            + self.encrypted_public_key
+            + self.encrypted_public_key  # type: ignore
             + self.encrypted_ciphertext
             + self.symmetric_key
         ).digest()

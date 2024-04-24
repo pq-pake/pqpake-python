@@ -60,12 +60,3 @@ class Interlocutor:
 
     def _generate_session_key(self, first_name: bytes, second_name: bytes) -> bytes:
         raise NotImplementedError
-
-    def generate_keypair(self) -> None:
-        raise NotImplementedError
-
-    def generate_symmetric_key(self) -> None:
-        raise NotImplementedError
-
-    def decrypt_ciphertext(self) -> None:
-        raise NotImplementedError

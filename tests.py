@@ -88,7 +88,7 @@ def ocake_test():
 
     alice.generate_keypair()
     bob.generate_symmetric_key(alice.encrypted_public_key, alice.name)  # type: ignore
-    alice.decrypt_ciphertext(bob.encrypted_ciphertext, bob.name)  # type: ignore
+    alice.decrypt_ciphertext(bob.encrypted_ciphertext, bob.auth_verifier, bob.name)  # type: ignore
 
     print(
         "alice.session_key == bob.session_key:",

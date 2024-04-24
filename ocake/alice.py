@@ -44,10 +44,10 @@ class AliceOCake(InterlocutorOCake):
             self.encrypted_ciphertext, self.derived_key
         )
 
+        self.symmetric_key = Kyber1024.dec(self.ciphertext, self.secret_key)
+
         if self.auth_verifier != auth_verifier:
             raise ValueError("Authentification failed. Key exchange aborted.")
-
-        self.symmetric_key = Kyber1024.dec(self.ciphertext, self.secret_key)
 
         if self.debug:
             print(
