@@ -2,7 +2,6 @@ from bitarray import bitarray
 
 from . import compact_encoder, feistel
 
-
 NB_COEFFICIENTS = 1024
 COEFFICIENT_MAX_VALUE = 3329
 

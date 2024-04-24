@@ -39,8 +39,8 @@ def encrypt(symmetric_key: bytes, message: bitarray) -> bitarray:
     new_right: bitarray = bitarray()
 
     for i in range(NB_ROUNDS // 2):
-        new_left = left ^ hash_half(right, symmetric_key, i)
-        new_right = right ^ hash_half(new_left, symmetric_key, i)
+        new_left = left ^ hash_half(right, symmetric_key, 2 * i)
+        new_right = right ^ hash_half(new_left, symmetric_key, 2 * i + 1)
 
         right = new_right
         left = new_left
@@ -64,8 +64,8 @@ def decrypt(symmetric__key: bytes, cipher: bitarray) -> bitarray:
     new_right: bitarray = bitarray()
 
     for i in range(NB_ROUNDS // 2 - 1, -1, -1):
-        new_right = right ^ hash_half(left, symmetric__key, i)
-        new_left = left ^ hash_half(new_right, symmetric__key, i)
+        new_right = right ^ hash_half(left, symmetric__key, 2 * i + 1)
+        new_left = left ^ hash_half(new_right, symmetric__key, 2 * i)
 
         right = new_right
         left = new_left
