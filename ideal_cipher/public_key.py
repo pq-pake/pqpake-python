@@ -57,7 +57,6 @@ def decrypt(encrypted_public_key: bitarray, symmetric_key: bytes) -> bytes:
             and decrypted_value_part is None
         ):
             decrypted_value_part = value_being_decrypted
-        value_being_decrypted = feistel.decrypt(symmetric_key, value_being_decrypted)
     if decrypted_value_part is None:
         raise ValueError(
             f"Decryption could not be completed in {NB_FEISTEL_ITERATIONS} Feistel iterations."
