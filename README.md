@@ -22,11 +22,32 @@ Where `[TEST]` is the test to be executed, in `feistel`, `public_key`, `cake` an
 
 ## Usage
 
+### For CAKE
+
 ```python
-from cake import Alice, Bob
-alice, bob = Alice(int(0).to_bytes(), b'Hello world!'), Bob(int(0).to_bytes(), b'Hello world!')
+from cake import AliceCake, BobCake
+
+alice = AliceCake(int(0).to_bytes(), b"password123")
+bob = BobCake(int(0).to_bytes(), b"password123")
+
 alice.generate_keypair()
-bob.generate_symmetric_key(alice.encrypted_public_key)
-alice.decrypt_ciphertext(bob.encrypted_ciphertext)
+bob.generate_symmetric_key(alice.encrypted_public_key, alice.name)
+alice.decrypt_ciphertext(bob.encrypted_ciphertext, bob.name)
+
+assert alice.session_key == bob.session_key  # Doesn't raise an error.
+```
+
+### For OCAKE
+
+```python
+from cake import AliceOCake, BobOCake
+
+alice = AliceOCake(int(0).to_bytes(), b"password123")
+bob = BobOCake(int(0).to_bytes(), b"password123")
+
+alice.generate_keypair()
+bob.generate_symmetric_key(alice.encrypted_public_key, alice.name)
+alice.decrypt_ciphertext(bob.encrypted_ciphertext, bob.auth_verifier, bob.name)
+
 assert alice.session_key == bob.session_key  # Doesn't raise an error.
 ```
