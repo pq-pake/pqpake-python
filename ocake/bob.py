@@ -6,7 +6,7 @@ from .. import ideal_cipher
 from .interlocutor_ocake import InterlocutorOCake
 
 
-class BobCake(InterlocutorOCake):
+class BobOCake(InterlocutorOCake):
     def __init__(
         self,
         session_id: bytes,

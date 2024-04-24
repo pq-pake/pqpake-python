@@ -1,8 +1,10 @@
+import sys
+
 from bitarray import bitarray
 from Crypto.Random import get_random_bytes
 from kyber import Kyber1024
 
-from . import AliceCake, BobCake
+from . import AliceCake, AliceOCake, BobCake, BobOCake
 from .ideal_cipher import feistel, public_key
 
 
@@ -80,6 +82,37 @@ def cake_test():
     )
 
 
-# feistel_test()
-# public_key_test()
-cake_test()
+def ocake_test():
+    alice = AliceOCake(int(0).to_bytes(), b"password123", debug=True)
+    bob = BobOCake(int(0).to_bytes(), b"password123", debug=True)
+
+    alice.generate_keypair()
+    bob.generate_symmetric_key(alice.encrypted_public_key, alice.name)  # type: ignore
+    alice.decrypt_ciphertext(bob.encrypted_ciphertext, bob.name)  # type: ignore
+
+    print(
+        "alice.session_key == bob.session_key:",
+        alice.session_key == bob.session_key,
+    )
+
+
+def main():
+    tests_possible = ["feistel", "public_key", "cake", "ocake"]
+
+    if len(sys.argv) != 2 or (arg := sys.argv[1].strip()) not in tests_possible:
+        print("Usage:")
+        print("  python -m cakepython.tests [TEST]")
+        print(f"  Where [TEST] is one of the following: {tests_possible}")
+        return
+
+    if arg == "feistel":
+        feistel_test()
+    elif arg == "public_key":
+        public_key_test()
+    elif arg == "cake":
+        cake_test()
+    elif arg == "ocake":
+        ocake_test()
+
+
+main()
